@@ -1,0 +1,2 @@
+import { describe,it,expect } from 'vitest';import { hexToRgb,rgbToHex,rgbToLab,labDistance } from './lab';
+describe('color math',()=>{it('converts hex to rgb and back',()=>{expect(hexToRgb('#336699')).toEqual([51,102,153]);expect(rgbToHex(51,102,153)).toBe('#336699');});it('maps white near L=100',()=>{expect(rgbToLab(255,255,255)[0]).toBeCloseTo(100,1);});it('measures zero distance for same Lab',()=>{expect(labDistance([1,2,3],[1,2,3])).toBe(0);});});

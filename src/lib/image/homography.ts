@@ -1,0 +1,5 @@
+import type { Pt } from '../types';
+export type Matrix3=[number,number,number,number,number,number,number,number,number];
+function solve(a:number[][],b:number[]):number[]{const n=b.length;for(let i=0;i<n;i++){let max=i;for(let j=i+1;j<n;j++)if(Math.abs(a[j][i])>Math.abs(a[max][i]))max=j;[a[i],a[max]]=[a[max],a[i]];[b[i],b[max]]=[b[max],b[i]];const p=a[i][i];if(Math.abs(p)<1e-12)throw new Error('Corner points do not define a valid perspective transform');for(let k=i;k<n;k++)a[i][k]/=p;b[i]/=p;for(let j=0;j<n;j++)if(j!==i){const m=a[j][i];for(let k=i;k<n;k++)a[j][k]-=m*a[i][k];b[j]-=m*b[i];}}return b;}
+export function homography(from:[Pt,Pt,Pt,Pt],to:[Pt,Pt,Pt,Pt]):Matrix3 {const a:number[][]=[],b:number[]=[];for(let i=0;i<4;i++){const{x,y}=from[i],u=to[i].x,v=to[i].y;a.push([x,y,1,0,0,0,-u*x,-u*y],[0,0,0,x,y,1,-v*x,-v*y]);b.push(u,v);}const h=solve(a,b);return [h[0],h[1],h[2],h[3],h[4],h[5],h[6],h[7],1];}
+export function transformPoint(m:Matrix3,p:Pt):Pt {const d=m[6]*p.x+m[7]*p.y+m[8];if(Math.abs(d)<1e-12)throw new Error('Point maps to infinity');return{x:(m[0]*p.x+m[1]*p.y+m[2])/d,y:(m[3]*p.x+m[4]*p.y+m[5])/d};}

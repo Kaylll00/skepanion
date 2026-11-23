@@ -1,0 +1,2 @@
+import {describe,it,expect} from 'vitest';import {suggestMix} from './mix';
+describe('mix suggestions',()=>{it('returns the exact named set color when available',()=>{expect(suggestMix('#336699',{id:'1',name:'set',colors:[{name:'Blue',hex:'#336699'}]})?.label).toBe('Blue');});it('returns no suggestion for an empty set',()=>{expect(suggestMix('#336699',{id:'1',name:'set',colors:[]})).toBeNull();});});
