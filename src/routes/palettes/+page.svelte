@@ -1,10 +1,10 @@
 <script lang="ts">
- import { onMount } from 'svelte';import { db } from '$lib/db';import type { PaletteSet } from '$lib/types';
+ import { onMount } from 'svelte';import { db } from '$lib/db';import { createId } from '$lib/id';import type { PaletteSet } from '$lib/types';
  let sets=$state<PaletteSet[]>([]),name=$state(''),colorName=$state(''),hex=$state('#2c5a4a'),colors=$state<{name:string;hex:string}[]>([{name:'Forest green',hex:'#2c5a4a'}]),error=$state('');
  async function refresh(){sets=await db.paletteSets.toArray();}
  onMount(()=>{void refresh();});
  function addColor(){if(!/^#[\da-f]{6}$/i.test(hex)){error='Enter a valid 6-digit hex color.';return;}colors=[...colors,{name:colorName.trim()||hex.toUpperCase(),hex:hex.toUpperCase()}];colorName='';error='';}
- async function create(){if(!name.trim()||!colors.length){error='Give this set a name and at least one color.';return;}await db.paletteSets.add({id:crypto.randomUUID(),name:name.trim(),colors});name='';colors=[];error='';await refresh();}
+ async function create(){if(!name.trim()||!colors.length){error='Give this set a name and at least one color.';return;}await db.paletteSets.add({id:createId(),name:name.trim(),colors});name='';colors=[];error='';await refresh();}
  async function remove(id:string){if(confirm('Delete this color set?')){await db.paletteSets.delete(id);await refresh();}}
 </script>
 <div class="app"><header class="topbar"><a class="brand" href="/"><span class="brand-mark">✳</span>Skepanion</a><nav class="nav"><a href="/">Drawings</a><a href="/monthly">Monthly</a></nav></header><p class="eyebrow">Your art supplies</p><h1>My colors</h1><p class="muted">Add colors from your paint or pencil set. We’ll suggest approximate mixes for each stage color.</p>
