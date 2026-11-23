@@ -1,8 +1,6 @@
 <script lang="ts">
  import type { Stage } from '../types';
- let { stages, selected = $bindable(''), onselect }: { stages: Stage[]; selected?: string; onselect?: (id:string)=>void } = $props();
- let urls=$state<Record<string,string>>({});
- $effect(()=>{for(const s of stages)if(!urls[s.id])urls[s.id]=URL.createObjectURL(s.flatBlob);return()=>{for(const u of Object.values(urls))URL.revokeObjectURL(u);};});
+	let { stages, urls, selected = $bindable(''), onselect }: { stages: Stage[]; urls: Record<string, string>; selected?: string; onselect?: (id:string)=>void } = $props();
 </script>
 <div class="timeline">{#each stages as stage,i (stage.id)}<button class:active={selected===stage.id} aria-pressed={selected===stage.id} onclick={()=>{selected=stage.id;onselect?.(stage.id)}}><img src={urls[stage.id]} alt=""/><span class="stage-name">{stage.label?.trim()||`Stage ${i+1}`}</span><time datetime={new Date(stage.createdAt).toISOString()}>{new Date(stage.createdAt).toLocaleDateString()}</time></button>{/each}</div>
 <style>.timeline{display:flex;gap:12px;overflow-x:auto;padding:7px 3px 15px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#d4ddd3 transparent}.timeline button{flex:0 0 100px;min-width:0;border:1px solid transparent;background:transparent;border-radius:14px;padding:5px;text-align:left;color:#718078;cursor:pointer;scroll-snap-align:start;transition:transform 180ms ease,border-color 180ms ease,background 180ms ease,color 180ms ease}.timeline button:hover{transform:translateY(-2px);color:#294b3e}.timeline button.active{border-color:#8cae94;background:#edf3eb;color:#294b3e}.timeline img{width:100%;height:88px;object-fit:cover;border-radius:10px;background:#eee;box-shadow:0 2px 7px #20352f14}.timeline span,.timeline time{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stage-name{padding:7px 2px 0;font-size:11px;font-weight:700}.timeline time{padding:2px 2px;font-size:10px;color:#89958c}</style>

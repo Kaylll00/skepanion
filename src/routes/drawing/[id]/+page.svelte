@@ -169,7 +169,7 @@
 			{#if stages.length === 0}
 				<div class="card empty-card"><div class="empty-mark" aria-hidden="true">✳</div><h2>Add your first photo</h2><p class="muted">A simple, repeatable photo makes it easier to see your progress.</p><a class="button" href={`${base}/drawing/${drawing.id}/add`}>Add a stage</a></div>
 			{:else}
-				<Timeline {stages} bind:selected />
+				<Timeline {stages} {urls} bind:selected />
 				{#if current}
 					<div class="card selected-stage-panel">
 						<form class="stage-label-form" onsubmit={saveLabel}>
